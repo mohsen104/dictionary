@@ -52,15 +52,14 @@ export default function App() {
         loading: false,
         error: "",
         word,
-        phonetic: phonetics[1]?.text,
-        audio: phonetics[1]?.audio,
+        phonetic: phonetics[1]?.text ?? phonetics[0]?.text,
+        audio: phonetics[1]?.audio ?? phonetics[0]?.audio,
         partOfSpeech: meanings[0]?.partOfSpeech,
         definition: meanings[0]?.definitions[0]?.definition,
         example: meanings[0]?.definitions[0]?.example,
         synonyms: meanings[0]?.synonyms,
         antonyms: meanings[0]?.antonyms,
       }));
-      console.log(dictionary);
     } catch (error) {
       setDictionary(() => ({
         loading: false,
@@ -110,7 +109,9 @@ export default function App() {
 
         {history.show && (
           <div className="px-1 py-3 text-md">
-            <span className="text-sky-800 font-semibold">last word search :</span>
+            <span className="text-sky-800 font-semibold">
+              last word search :
+            </span>
             <span
               onClick={() => setSearch(() => history.value.trim())}
               className="border-b-2 border-b-blue-600 mx-2 text-blue-600 cursor-pointer"
