@@ -70,7 +70,7 @@ export default function App() {
 
   return (
     <div className="w-full h-screen flex flex-col items-center justify-center bg-gradient-to-r from-violet-500 to-fuchsia-500">
-      <section className="bg-white shadow-md px-4 py-5 w-fit rounded-md">
+      <section className="bg-white shadow-md px-4 py-5 w-96 rounded-md">
         <div className="flex items-center justify-center pb-5 space-x-1 text-slate-700 text-2xl">
           <svg
             xmlns="http://www.w3.org/2000/svg"
