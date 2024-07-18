@@ -22,10 +22,6 @@ export default function App() {
     show: localStorage.getItem("history") ? true : false,
   });
 
-  useEffect(() => {
-    console.log(history);
-  }, []);
-
   const fetchHandler = async () => {
     localStorage.setItem("history", search.trim());
     setHistory(() => ({
@@ -52,14 +48,15 @@ export default function App() {
         loading: false,
         error: "",
         word,
-        phonetic: phonetics[0]?.text ?? phonetics[1]?.text,
-        audio: phonetics[0]?.audio ?? phonetics[1]?.audio,
+        phonetic: phonetics[1]?.text ? phonetics[1].text : phonetics[0].text,
+        audio: phonetics[1]?.audio ? phonetics[1].audio : phonetics[0].audio,
         partOfSpeech: meanings[0]?.partOfSpeech,
         definition: meanings[0]?.definitions[0]?.definition,
         example: meanings[0]?.definitions[0]?.example,
         synonyms: meanings[0]?.synonyms,
         antonyms: meanings[0]?.antonyms,
       }));
+      console.log();
     } catch (error) {
       setDictionary(() => ({
         loading: false,
@@ -145,7 +142,7 @@ export default function App() {
               <audio src={dictionary.audio} ref={audioRef}></audio>
               <button
                 id="btnPlay"
-                onClick={() => console.log(audioRef.current.play())}
+                onClick={() => audioRef.current.play()}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
