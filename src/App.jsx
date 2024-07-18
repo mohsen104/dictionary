@@ -1,5 +1,5 @@
 import Lottie from "lottie-react";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import loadingAnimation from "../public/loadingAnimation.json";
 
 export default function App() {
@@ -14,11 +14,24 @@ export default function App() {
     partOfSpeech: "",
     definition: "",
     example: "",
-    synonyms: "",
-    antonyms: "",
+    synonyms: [],
+    antonyms: [],
+  });
+  const [history, setHistory] = useState({
+    value: localStorage.getItem("history"),
+    show: localStorage.getItem("history") ? true : false,
   });
 
+  useEffect(() => {
+    console.log(history);
+  }, []);
+
   const fetchHandler = async () => {
+    localStorage.setItem("history", search.trim());
+    setHistory(() => ({
+      value: search.trim(),
+      show: false,
+    }));
     setDictionary(() => ({
       loading: true,
     }));
@@ -39,14 +52,15 @@ export default function App() {
         loading: false,
         error: "",
         word,
-        phonetic: phonetics[1].text,
-        audio: phonetics[1].audio,
-        partOfSpeech: meanings[0].partOfSpeech,
-        definition: meanings[0].definitions[0].definition,
-        example: meanings[0].definitions[0].example,
-        synonyms: meanings[0].synonyms,
-        antonyms: meanings[0].antonyms,
+        phonetic: phonetics[1]?.text,
+        audio: phonetics[1]?.audio,
+        partOfSpeech: meanings[0]?.partOfSpeech,
+        definition: meanings[0]?.definitions[0]?.definition,
+        example: meanings[0]?.definitions[0]?.example,
+        synonyms: meanings[0]?.synonyms,
+        antonyms: meanings[0]?.antonyms,
       }));
+      console.log(dictionary);
     } catch (error) {
       setDictionary(() => ({
         loading: false,
@@ -57,7 +71,7 @@ export default function App() {
 
   return (
     <div className="w-full h-screen flex flex-col items-center justify-center bg-gradient-to-r from-violet-500 to-fuchsia-500">
-      <section className="bg-white shadow-md px-4 py-5 w-96 rounded-md">
+      <section className="bg-white shadow-md px-4 py-5 w-fit rounded-md">
         <div className="flex items-center justify-center pb-5 space-x-1 text-slate-700 text-2xl">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -93,6 +107,18 @@ export default function App() {
             Search
           </button>
         </div>
+
+        {history.show && (
+          <div className="px-1 py-3 text-md">
+            <span className="text-sky-800 font-semibold">last word search :</span>
+            <span
+              onClick={() => setSearch(() => history.value.trim())}
+              className="border-b-2 border-b-blue-600 mx-2 text-blue-600 cursor-pointer"
+            >
+              {history.value.trim()}
+            </span>
+          </div>
+        )}
 
         {dictionary.loading && (
           <Lottie animationData={loadingAnimation} loop={true} />
@@ -160,14 +186,22 @@ export default function App() {
             {!!dictionary.synonyms.length && (
               <div className="px-1 py-3 text-md">
                 <p className="text-blue-600 font-bold">synonyms : </p>
-                <p id="synonyms">{dictionary.synonyms}</p>
+                {dictionary.synonyms.map((i, index) => (
+                  <span key={index} id="synonyms" className="pr-2">
+                    [{i}]
+                  </span>
+                ))}
               </div>
             )}
 
             {!!dictionary.antonyms.length && (
               <div className="px-1 py-3 text-md">
                 <p className="text-orange-600 font-bold">antonyms : </p>
-                <p id="antonyms">{dictionary.antonyms}</p>
+                {dictionary.antonyms.map((i, index) => (
+                  <span key={index} id="antonyms" className="pr-2">
+                    [{i}]
+                  </span>
+                ))}
               </div>
             )}
           </section>
